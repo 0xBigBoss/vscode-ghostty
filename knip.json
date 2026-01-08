@@ -1,0 +1,7 @@
+{
+	"$schema": "https://unpkg.com/knip@5/schema.json",
+	"entry": ["src/webview/main.ts", "src/webview/panel-main.ts"],
+	"ignore": ["src/webview/main.ts", "src/webview/panel-main.ts"],
+	"ignoreDependencies": ["ghostty-web"],
+	"ignoreBinaries": ["node-pty-prebuilt-multiarch"]
+}

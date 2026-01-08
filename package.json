@@ -1,0 +1,199 @@
+{
+	"name": "vscode-ghostty",
+	"displayName": "Ghostty Terminal",
+	"description": "GPU-accelerated terminal for VS Code powered by Ghostty's renderer via WebAssembly",
+	"version": "0.1.0",
+	"publisher": "0xbigboss",
+	"license": "MIT",
+	"icon": "images/icon.png",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/0xBigBoss/vscode-ghostty.git"
+	},
+	"bugs": {
+		"url": "https://github.com/0xBigBoss/vscode-ghostty/issues"
+	},
+	"homepage": "https://github.com/0xBigBoss/vscode-ghostty#readme",
+	"engines": {
+		"vscode": "^1.106.0"
+	},
+	"categories": [
+		"Other",
+		"Programming Languages"
+	],
+	"activationEvents": [
+		"onView:ghosttyTerminalPanel",
+		"onCommand:ghostty.newTerminal",
+		"onCommand:ghostty.newTerminalInEditor",
+		"onCommand:ghostty.newTerminalInPanel",
+		"onCommand:ghostty.togglePanel",
+		"onCommand:ghostty.newTerminalHere",
+		"onCommand:ghostty.nextTab",
+		"onCommand:ghostty.previousTab"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"viewsContainers": {
+			"panel": [
+				{
+					"id": "ghostty-terminal-panel",
+					"title": "Ghostty",
+					"icon": "$(terminal)"
+				}
+			]
+		},
+		"views": {
+			"ghostty-terminal-panel": [
+				{
+					"id": "ghosttyTerminalPanel",
+					"name": "Terminal",
+					"type": "webview"
+				}
+			]
+		},
+		"commands": [
+			{
+				"command": "ghostty.newTerminal",
+				"title": "Ghostty: New Terminal"
+			},
+			{
+				"command": "ghostty.newTerminalInEditor",
+				"title": "Ghostty: New Terminal in Editor"
+			},
+			{
+				"command": "ghostty.newTerminalInPanel",
+				"title": "Ghostty: New Terminal in Panel"
+			},
+			{
+				"command": "ghostty.togglePanel",
+				"title": "Ghostty: Toggle Terminal Panel"
+			},
+			{
+				"command": "ghostty.newTerminalHere",
+				"title": "Ghostty: New Terminal Here"
+			},
+			{
+				"command": "ghostty.nextTab",
+				"title": "Ghostty: Next Terminal Tab"
+			},
+			{
+				"command": "ghostty.previousTab",
+				"title": "Ghostty: Previous Terminal Tab"
+			}
+		],
+		"menus": {
+			"explorer/context": [
+				{
+					"command": "ghostty.newTerminalHere",
+					"group": "navigation"
+				}
+			]
+		},
+		"configuration": {
+			"title": "Ghostty Terminal",
+			"properties": {
+				"ghostty.fontFamily": {
+					"type": "string",
+					"default": "",
+					"description": "Font family for Ghostty Terminal. Leave empty to use editor.fontFamily."
+				},
+				"ghostty.fontSize": {
+					"type": "number",
+					"default": 0,
+					"minimum": 6,
+					"maximum": 72,
+					"description": "Font size in pixels. Set to 0 to use editor.fontSize."
+				},
+				"ghostty.defaultTerminalLocation": {
+					"type": "string",
+					"enum": [
+						"panel",
+						"editor"
+					],
+					"default": "panel",
+					"description": "Where new terminals open by default"
+				},
+				"ghostty.bell": {
+					"type": "string",
+					"enum": [
+						"visual",
+						"none"
+					],
+					"default": "visual",
+					"description": "Bell notification style. 'visual' shows a flash and status bar notification, 'none' disables all bell feedback."
+				},
+				"ghostty.notifications": {
+					"type": "boolean",
+					"default": true,
+					"description": "Show VS Code notifications from terminal applications (OSC 9 escape sequences)."
+				}
+			}
+		},
+		"keybindings": [
+			{
+				"command": "-workbench.action.terminal.toggleTerminal",
+				"key": "ctrl+`"
+			},
+			{
+				"command": "-workbench.action.terminal.new",
+				"key": "ctrl+shift+`"
+			},
+			{
+				"command": "ghostty.togglePanel",
+				"key": "ctrl+`"
+			},
+			{
+				"command": "ghostty.newTerminal",
+				"key": "ctrl+shift+`"
+			},
+			{
+				"command": "ghostty.newTerminalInPanel",
+				"key": "ctrl+shift+t",
+				"mac": "cmd+shift+t"
+			},
+			{
+				"command": "ghostty.nextTab",
+				"key": "ctrl+shift+]",
+				"mac": "cmd+shift+]",
+				"when": "focusedView == 'ghosttyTerminalPanel'"
+			},
+			{
+				"command": "ghostty.previousTab",
+				"key": "ctrl+shift+[",
+				"mac": "cmd+shift+[",
+				"when": "focusedView == 'ghosttyTerminalPanel'"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run build:prod",
+		"compile": "tsgo -p ./",
+		"build": "node esbuild.config.mjs",
+		"build:prod": "NODE_ENV=production node esbuild.config.mjs",
+		"dev": "node esbuild.config.mjs --watch",
+		"watch": "node esbuild.config.mjs --watch",
+		"typecheck": "tsgo --noEmit",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format --write .",
+		"jscpd": "jscpd src --min-lines 10 --min-tokens 50",
+		"knip": "knip",
+		"test": "vitest run",
+		"test:watch": "vitest"
+	},
+	"dependencies": {
+		"@0xbigboss/ghostty-web": "^0.4.0",
+		"node-pty": "^1.0.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.3.11",
+		"@types/node": "^22.0.0",
+		"@types/vscode": "^1.106.0",
+		"@typescript/native-preview": "^7.0.0-dev.20260105.1",
+		"esbuild": "^0.27.2",
+		"jscpd": "^4.0.5",
+		"knip": "^5.80.0",
+		"lefthook": "^2.0.13",
+		"vitest": "^4.0.16"
+	}
+}

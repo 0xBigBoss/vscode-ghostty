@@ -1,0 +1,14 @@
+pre-commit:
+  parallel: true
+  commands:
+    typecheck:
+      glob: "*.{ts,tsx}"
+      run: npm run typecheck
+    biome:
+      glob: "*.{ts,tsx,js,jsx,json}"
+      run: npx biome check --no-errors-on-unmatched {staged_files}
+    jscpd:
+      glob: "src/**/*.{ts,tsx}"
+      run: npm run jscpd
+    knip:
+      run: npm run knip

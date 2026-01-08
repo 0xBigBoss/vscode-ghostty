@@ -1,0 +1,295 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html,
+body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	/* Use VS Code editor background (consistent with font settings priority) */
+	background-color: var(
+		--vscode-editor-background,
+		var(--vscode-panel-background)
+	);
+}
+
+/* Tab bar styling */
+#tab-bar {
+	display: flex;
+	align-items: center;
+	height: 28px;
+	padding: 0 4px;
+	background-color: var(
+		--vscode-editorGroupHeader-tabsBackground,
+		var(--vscode-tab-inactiveBackground)
+	);
+	border-bottom: 1px solid
+		var(
+			--vscode-editorGroupHeader-tabsBorder,
+			var(--vscode-tab-border, transparent)
+		);
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+#tab-list {
+	display: flex;
+	align-items: center;
+	flex: 1;
+	min-width: 0;
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+
+#tab-list::-webkit-scrollbar {
+	display: none;
+}
+
+.tab {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	padding: 4px 8px;
+	min-width: 80px;
+	max-width: 160px;
+	height: 24px;
+	background-color: var(--vscode-tab-inactiveBackground);
+	color: var(--vscode-tab-inactiveForeground);
+	border: none;
+	border-right: 1px solid var(--vscode-tab-border, transparent);
+	cursor: pointer;
+	font-size: 12px;
+	font-family: var(--vscode-font-family, sans-serif);
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.tab:hover {
+	background-color: var(
+		--vscode-tab-hoverBackground,
+		var(--vscode-list-hoverBackground)
+	);
+	color: var(
+		--vscode-tab-hoverForeground,
+		var(--vscode-tab-inactiveForeground)
+	);
+}
+
+.tab.active {
+	background-color: var(--vscode-tab-activeBackground);
+	color: var(--vscode-tab-activeForeground);
+	border-bottom: 2px solid
+		var(--vscode-tab-activeBorderTop, var(--vscode-focusBorder));
+}
+
+.tab-title {
+	flex: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.tab-close {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 16px;
+	height: 16px;
+	border: none;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
+	border-radius: 2px;
+	opacity: 0;
+	transition: opacity 0.1s;
+}
+
+.tab:hover .tab-close,
+.tab.active .tab-close {
+	opacity: 1;
+}
+
+.tab-close:hover {
+	background-color: var(--vscode-toolbar-hoverBackground);
+}
+
+#new-tab-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	margin-left: 4px;
+	border: none;
+	background: transparent;
+	color: var(--vscode-foreground);
+	cursor: pointer;
+	border-radius: 4px;
+	font-size: 16px;
+	flex-shrink: 0;
+}
+
+#new-tab-btn:hover {
+	background-color: var(--vscode-toolbar-hoverBackground);
+}
+
+/* Terminals container */
+#terminals-container {
+	position: relative;
+	width: 100%;
+	height: calc(100vh - 28px);
+	overflow: hidden;
+}
+
+.terminal-wrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+}
+
+.terminal-wrapper.active {
+	display: block;
+}
+
+.terminal-container {
+	width: 100%;
+	height: 100%;
+	padding: 4px;
+	overflow: hidden;
+}
+
+/* Terminal canvas styling */
+.terminal-container canvas {
+	display: block;
+}
+
+/* Bell visual flash effect */
+.terminal-container.bell-flash {
+	animation: bell-flash 150ms ease-out;
+}
+
+@keyframes bell-flash {
+	0% {
+		filter: brightness(1);
+	}
+	50% {
+		filter: brightness(1.3);
+	}
+	100% {
+		filter: brightness(1);
+	}
+}
+
+/* Drag-and-drop visual feedback */
+.terminal-container.drag-over {
+	outline: 2px dashed var(--vscode-focusBorder);
+	outline-offset: -2px;
+	background-color: color-mix(
+		in srgb,
+		var(--vscode-focusBorder) 10%,
+		transparent
+	);
+}
+
+/* Search overlay */
+#search-overlay {
+	position: fixed;
+	top: 32px;
+	right: 20px;
+	z-index: 1000;
+}
+
+#search-overlay .search-container {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	padding: 4px 8px;
+	background-color: var(--vscode-input-background);
+	border: 1px solid var(--vscode-input-border, var(--vscode-input-background));
+	border-radius: 4px;
+	box-shadow: var(--vscode-widget-shadow, 0 2px 8px rgba(0, 0, 0, 0.15));
+}
+
+#search-overlay #search-input {
+	width: 180px;
+	padding: 4px 8px;
+	border: none;
+	outline: none;
+	background-color: var(--vscode-input-background);
+	color: var(--vscode-input-foreground);
+	font-family: var(--vscode-font-family, sans-serif);
+	font-size: 13px;
+}
+
+#search-overlay #search-input::placeholder {
+	color: var(--vscode-input-placeholderForeground);
+}
+
+#search-overlay #search-input:focus {
+	outline: 1px solid var(--vscode-focusBorder);
+	outline-offset: -1px;
+}
+
+#search-overlay #search-results-count {
+	font-size: 12px;
+	color: var(--vscode-descriptionForeground);
+	min-width: 70px;
+	text-align: center;
+}
+
+#search-overlay button {
+	padding: 2px 6px;
+	border: none;
+	background-color: transparent;
+	color: var(--vscode-foreground);
+	cursor: pointer;
+	font-size: 12px;
+	border-radius: 2px;
+}
+
+#search-overlay button:hover {
+	background-color: var(--vscode-list-hoverBackground);
+}
+
+#search-overlay button:active {
+	background-color: var(--vscode-list-activeSelectionBackground);
+}
+
+/* Empty state */
+#empty-state {
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	color: var(--vscode-descriptionForeground);
+	font-family: var(--vscode-font-family, sans-serif);
+}
+
+#empty-state.visible {
+	display: flex;
+}
+
+#empty-state p {
+	margin-bottom: 12px;
+}
+
+#empty-state button {
+	padding: 6px 12px;
+	border: none;
+	background-color: var(--vscode-button-background);
+	color: var(--vscode-button-foreground);
+	cursor: pointer;
+	border-radius: 4px;
+	font-size: 13px;
+	font-family: var(--vscode-font-family, sans-serif);
+}
+
+#empty-state button:hover {
+	background-color: var(--vscode-button-hoverBackground);
+}

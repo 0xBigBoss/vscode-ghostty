@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src {{cspSource}} 'unsafe-inline' 'wasm-unsafe-eval'; style-src {{cspSource}} 'unsafe-inline'; img-src {{cspSource}} data:; font-src {{cspSource}}; connect-src {{cspSource}};">
+  <link rel="stylesheet" href="{{stylesUri}}">
+</head>
+<body data-wasm-url="{{wasmUri}}">
+  <div id="tab-bar">
+    <div id="tab-list"></div>
+    <button id="new-tab-btn" title="New Terminal">+</button>
+  </div>
+  <div id="terminals-container"></div>
+  <script src="{{ghosttyWebJsUri}}"></script>
+  <script src="{{mainJsUri}}"></script>
+</body>
+</html>
