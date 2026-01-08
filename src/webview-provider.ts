@@ -65,6 +65,7 @@ export function createWebviewPanel(
 				vscode.Uri.joinPath(
 					extensionUri,
 					"node_modules",
+					"@0xbigboss",
 					"ghostty-web",
 					"dist",
 				),

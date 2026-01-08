@@ -51,6 +51,7 @@ export class GhosttyPanelViewProvider implements vscode.WebviewViewProvider {
 				vscode.Uri.joinPath(
 					this._extensionUri,
 					"node_modules",
+					"@0xbigboss",
 					"ghostty-web",
 					"dist",
 				),
