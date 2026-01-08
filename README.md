@@ -19,7 +19,7 @@ A GPU-accelerated terminal extension for VS Code powered by [Ghostty's](https://
 Search for "Ghostty Terminal" in the VS Code extensions marketplace, or install from the command line:
 
 ```bash
-code --install-extension 0xbigboss.vscode-ghostty
+code --install-extension bigboss.vscode-ghostty
 ```
 
 ## Usage
