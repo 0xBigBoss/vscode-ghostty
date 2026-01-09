@@ -487,6 +487,16 @@ interface WebviewState {
 	// the terminal's paste() method which correctly wraps text with bracketed
 	// paste sequences (\x1b[200~ ... \x1b[201~) when the shell has enabled mode 2004.
 	document.addEventListener("paste", (e: ClipboardEvent) => {
+		// Skip handling for input elements (search overlay, etc.)
+		const target = e.target as HTMLElement;
+		if (
+			target.tagName === "INPUT" ||
+			target.tagName === "TEXTAREA" ||
+			target.isContentEditable
+		) {
+			return;
+		}
+
 		const text = e.clipboardData?.getData("text/plain");
 		if (!text) return;
 
