@@ -27,7 +27,7 @@
 - [x] Search in terminal (Cmd+F)
 - [x] Scrollback persistence across window reloads
 - [x] Drag-and-drop files into terminal (paste path)
-- [x] Bracketed paste mode support (handled by xterm.js when shell requests DECSET 2004)
+- [x] Bracketed paste mode support (paste events wrapped with \x1b[200~ / \x1b[201~ when DECSET 2004 enabled)
 - [x] Bell notification (visual/audio)
 - [x] OSC 9 notifications
 

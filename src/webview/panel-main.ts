@@ -401,6 +401,39 @@ interface PanelTerminal {
 		});
 		resizeObserver.observe(container);
 
+		// Bracketed paste mode: Handle paste events for this terminal
+		// VS Code webviews may intercept paste events. We need to ensure paste
+		// events are properly wrapped with bracketed paste sequences when mode 2004
+		// is enabled by the shell.
+		container.addEventListener("paste", (e: ClipboardEvent) => {
+			const text = e.clipboardData?.getData("text/plain");
+			if (!text) return;
+
+			e.preventDefault();
+			e.stopPropagation();
+
+			// Use the terminal's paste() method which handles bracketed paste mode
+			if (typeof (term as any).paste === "function") {
+				(term as any).paste(text);
+			} else {
+				// Fallback: check hasBracketedPaste and wrap manually
+				const hasBracketedPaste = (term as any).hasBracketedPaste?.() ?? false;
+				if (hasBracketedPaste) {
+					vscode.postMessage({
+						type: "terminal-input",
+						terminalId: id,
+						data: `\x1b[200~${text}\x1b[201~`,
+					});
+				} else {
+					vscode.postMessage({
+						type: "terminal-input",
+						terminalId: id,
+						data: text,
+					});
+				}
+			}
+		});
+
 		// Drag-and-drop
 		container.addEventListener("dragover", (e) => {
 			e.preventDefault();

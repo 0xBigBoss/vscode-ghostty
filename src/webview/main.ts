@@ -481,6 +481,42 @@ interface WebviewState {
 		term.write("\x1b[90m--- Session restored ---\x1b[0m\r\n");
 	}
 
+	// Bracketed paste mode: Handle paste events explicitly
+	// VS Code webviews may intercept paste events before they reach the terminal
+	// container. We add a document-level listener to catch these events and use
+	// the terminal's paste() method which correctly wraps text with bracketed
+	// paste sequences (\x1b[200~ ... \x1b[201~) when the shell has enabled mode 2004.
+	document.addEventListener("paste", (e: ClipboardEvent) => {
+		const text = e.clipboardData?.getData("text/plain");
+		if (!text) return;
+
+		e.preventDefault();
+		e.stopPropagation();
+
+		// Use the terminal's paste() method which handles bracketed paste mode
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		if (typeof (term as any).paste === "function") {
+			(term as any).paste(text);
+		} else {
+			// Fallback: check hasBracketedPaste and wrap manually
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const hasBracketedPaste = (term as any).hasBracketedPaste?.() ?? false;
+			if (hasBracketedPaste) {
+				vscode.postMessage({
+					type: "terminal-input",
+					terminalId: TERMINAL_ID,
+					data: `\x1b[200~${text}\x1b[201~`,
+				});
+			} else {
+				vscode.postMessage({
+					type: "terminal-input",
+					terminalId: TERMINAL_ID,
+					data: text,
+				});
+			}
+		}
+	});
+
 	// Drag-and-drop files: paste file path into terminal
 	const container = document.getElementById("terminal-container")!;
 
