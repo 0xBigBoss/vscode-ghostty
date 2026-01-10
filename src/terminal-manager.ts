@@ -40,17 +40,13 @@ function getDisplaySettings() {
 
 /** Get terminal theme colors from workbench.colorCustomizations with theme-scoped override support */
 function resolveTerminalTheme(): TerminalTheme {
+	const workbenchConfig = vscode.workspace.getConfiguration("workbench");
 	const colorCustomizations =
-		vscode.workspace
-			.getConfiguration("workbench")
-			.get<Record<string, unknown>>("colorCustomizations") ?? {};
+		workbenchConfig.get<Record<string, unknown>>("colorCustomizations") ?? {};
 
 	// Get current theme name for theme-scoped overrides (e.g., "[Monokai]": {...})
-	// Note: VS Code's ColorTheme type doesn't include 'label' but it's available at runtime
-	const activeTheme = vscode.window.activeColorTheme as
-		| { label?: string }
-		| undefined;
-	const currentThemeName = activeTheme?.label;
+	// Read from workbench.colorTheme setting since activeColorTheme.label is not in public API
+	const currentThemeName = workbenchConfig.get<string>("colorTheme");
 
 	// Start with global color customizations (top-level keys without brackets)
 	const mergedColors: Record<string, string> = {};
